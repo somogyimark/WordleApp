@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <GridLayout
+        android:id="@+id/wordleGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="5"
+        android:rowCount="5"
+        android:alignmentMode="alignMargins"
+        android:useDefaultMargins="true" />
+
+    <EditText
+        android:id="@+id/guessInput"
+        android:hint="Írj be egy szót"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="5"
+        android:inputType="textCapCharacters"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:text="Tipp küldése"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
+</LinearLayout>
