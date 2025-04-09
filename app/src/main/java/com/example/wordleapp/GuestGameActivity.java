@@ -65,17 +65,22 @@ public class GuestGameActivity extends AppCompatActivity {
             }
         }
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String guess = guessInput.getText().toString().toUpperCase();
-                if (guess.length() != 5) {
-                    Toast.makeText(GuestGameActivity.this, "5 betűs szót írj be!", Toast.LENGTH_SHORT).show();
+        submitButton.setOnClickListener(v -> {
+            String guess = guessInput.getText().toString().toUpperCase();
+            if (guess.length() != 5) {
+                Toast.makeText(this, "5 betűs szót írj be!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            isWordValid(guess, isValid -> {
+                if (!isValid) {
+                    Toast.makeText(this, "Ez a szó nincs a listában!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                // csak akkor mehet tovább a játék, ha valid a szó
                 if (attempt >= 5) {
-                    Toast.makeText(GuestGameActivity.this, "Nincs több próbálkozás!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Nincs több próbálkozás!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -84,13 +89,14 @@ public class GuestGameActivity extends AppCompatActivity {
                 guessInput.setText("");
 
                 if (guess.equals(targetWord)) {
-                    Toast.makeText(GuestGameActivity.this, "Gratulálok, nyertél!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Gratulálok, nyertél!", Toast.LENGTH_LONG).show();
                     submitButton.setEnabled(false);
                 } else if (attempt == 5) {
-                    Toast.makeText(GuestGameActivity.this, "Vége! A szó: " + targetWord, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Vége! A szó: " + targetWord, Toast.LENGTH_LONG).show();
                 }
-            }
+            });
         });
+
     }
 
     private void checkGuess(String guess) {
@@ -153,6 +159,30 @@ public class GuestGameActivity extends AppCompatActivity {
             return "APPLE";
         }
     }
+
+    private void isWordValid(String guess, WordCheckCallback callback) {
+        new Thread(() -> {
+            boolean found = false;
+            try {
+                InputStream is = getAssets().open("words.txt");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.trim().equalsIgnoreCase(guess)) {
+                        found = true;
+                        break;
+                    }
+                }
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            boolean finalFound = found;
+            runOnUiThread(() -> callback.onResult(finalFound));
+        }).start();
+    }
+
 
 
 
