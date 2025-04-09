@@ -7,15 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/pastel_canary"
-    tools:context=".GameActivity"
-    android:id="@id/main">
+    tools:context=".GuestGameActivity"
+    android:id="@+id/main">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_20sdp"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:orientation="vertical">
 
 
         <GridLayout

@@ -105,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        playAsAGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this , GuestGameActivity.class));
+            }
+        });
+
     }
 
 }

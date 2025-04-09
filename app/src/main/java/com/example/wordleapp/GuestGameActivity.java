@@ -1,6 +1,5 @@
 package com.example.wordleapp;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class GameActivity extends AppCompatActivity {
+public class GuestGameActivity extends AppCompatActivity {
 
     private final String targetWord = "APPLE";
     private int attempt = 0;
@@ -27,7 +26,6 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_game);
@@ -55,12 +53,12 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String guess = guessInput.getText().toString().toUpperCase();
                 if (guess.length() != 5) {
-                    Toast.makeText(GameActivity.this, "5 betűs szót írj be!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GuestGameActivity.this, "5 betűs szót írj be!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (attempt >= 5) {
-                    Toast.makeText(GameActivity.this, "Nincs több próbálkozás!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GuestGameActivity.this, "Nincs több próbálkozás!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -69,10 +67,10 @@ public class GameActivity extends AppCompatActivity {
                 guessInput.setText("");
 
                 if (guess.equals(targetWord)) {
-                    Toast.makeText(GameActivity.this, "Gratulálok, nyertél!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(GuestGameActivity.this, "Gratulálok, nyertél!", Toast.LENGTH_LONG).show();
                     submitButton.setEnabled(false);
                 } else if (attempt == 5) {
-                    Toast.makeText(GameActivity.this, "Vége! A szó: " + targetWord, Toast.LENGTH_LONG).show();
+                    Toast.makeText(GuestGameActivity.this, "Vége! A szó: " + targetWord, Toast.LENGTH_LONG).show();
                 }
             }
         });
