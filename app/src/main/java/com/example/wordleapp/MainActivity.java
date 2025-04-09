@@ -20,7 +20,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
+
+
+
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -44,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        copyWordsToInternalStorageIfNeeded();
+
 
         login_username = findViewById(R.id.login_username);
         login_password = findViewById(R.id.login_password);
@@ -113,5 +129,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private void copyWordsToInternalStorageIfNeeded() {
+        File file = new File(getFilesDir(), "words.txt");
+        if (!file.exists()) {
+            try {
+                InputStream is = getAssets().open("words.txt");
+                FileOutputStream fos = new FileOutputStream(file);
+
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = is.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
+                }
+
+                is.close();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
 
 }
