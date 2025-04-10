@@ -72,7 +72,6 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Létrehozzuk az új felhasználó JSON objektumot
                 JSONObject newUser = new JSONObject();
                 try {
                     newUser.put("first_name", mySignUp_firstname);
@@ -91,11 +90,10 @@ public class SignUpActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("users_data", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                String usersString = sharedPreferences.getString("users", "[]"); // Üres tömb, ha nincs még mentett adat
+                String usersString = sharedPreferences.getString("users", "[]");
                 try {
                     JSONArray usersArray = new JSONArray(usersString);
 
-                    // Ellenőrizzük, hogy a felhasználónév már létezik-e
                     for (int i = 0; i < usersArray.length(); i++) {
                         JSONObject existingUser = usersArray.getJSONObject(i);
                         if (existingUser.getString("user_name").equals(mySignUp_username)) {
@@ -104,7 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     }
 
-                    usersArray.put(newUser); // hozzáadjuk az új felhasználót
+                    usersArray.put(newUser);
                     editor.putString("users", usersArray.toString());
                     editor.apply();
 

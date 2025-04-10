@@ -36,7 +36,8 @@ public class GuestGameActivity extends AppCompatActivity {
 
     private EditText guessInput;
     private Button submitButton;
-    private TextView[][] textCells = new TextView[5][5]; // [row][col]
+    private TextView[][] textCells = new TextView[5][5];
+    private Button playAgainButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +56,12 @@ public class GuestGameActivity extends AppCompatActivity {
         guessInput = findViewById(R.id.guessInput);
         submitButton = findViewById(R.id.submitButton);
 
+        playAgainButton = findViewById(R.id.playAgainButton);
 
-        // Töltsük be az XML-ben lévő TextView cellákat
+
+        playAgainButton.setOnClickListener(v -> recreate());
+
+
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 5; col++) {
                 String cellId = "cell_" + row + col;
@@ -68,19 +73,18 @@ public class GuestGameActivity extends AppCompatActivity {
         submitButton.setOnClickListener(v -> {
             String guess = guessInput.getText().toString().toUpperCase();
             if (guess.length() != 5) {
-                Toast.makeText(this, "5 betűs szót írj be!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Write a 5 letter word!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             isWordValid(guess, isValid -> {
                 if (!isValid) {
-                    Toast.makeText(this, "Ez a szó nincs a listában!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "It's not in the list!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // csak akkor mehet tovább a játék, ha valid a szó
                 if (attempt >= 5) {
-                    Toast.makeText(this, "Nincs több próbálkozás!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No more attempts!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -89,10 +93,12 @@ public class GuestGameActivity extends AppCompatActivity {
                 guessInput.setText("");
 
                 if (guess.equals(targetWord)) {
-                    Toast.makeText(this, "Gratulálok, nyertél!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Congratulations, you won!", Toast.LENGTH_LONG).show();
+                    playAgainButton.setVisibility(View.VISIBLE);
                     submitButton.setEnabled(false);
                 } else if (attempt == 5) {
-                    Toast.makeText(this, "Vége! A szó: " + targetWord, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Game over! The word was: " + targetWord, Toast.LENGTH_LONG).show();
+                    playAgainButton.setVisibility(View.VISIBLE);
                 }
             });
         });
@@ -103,13 +109,13 @@ public class GuestGameActivity extends AppCompatActivity {
         boolean[] correctFlags = new boolean[5];
         int[] letterCount = new int[26]; // a-z
 
-        // 1. Lépés: megszámoljuk, mennyi van minden betűből a targetWord-ben
+
         for (int i = 0; i < targetWord.length(); i++) {
             char c = targetWord.charAt(i);
             letterCount[c - 'A']++;
         }
 
-        // 2. Első kör: Zöldek ellenőrzése
+
         for (int i = 0; i < 5; i++) {
             char guessChar = guess.charAt(i);
             textCells[attempt][i].setText(String.valueOf(guessChar));
@@ -117,17 +123,17 @@ public class GuestGameActivity extends AppCompatActivity {
             if (guessChar == targetWord.charAt(i)) {
                 textCells[attempt][i].setBackgroundResource(R.drawable.green_background);
                 correctFlags[i] = true;
-                letterCount[guessChar - 'A']--; // már felhasználtuk
+                letterCount[guessChar - 'A']--;
             }
         }
 
-        // 3. Második kör: Sárgák ellenőrzése
+
         for (int i = 0; i < 5; i++) {
             char guessChar = guess.charAt(i);
             if (!correctFlags[i]) {
                 if (letterCount[guessChar - 'A'] > 0) {
                     textCells[attempt][i].setBackgroundResource(R.drawable.yellow_background);
-                    letterCount[guessChar - 'A']--; // elhasználjuk egyszer
+                    letterCount[guessChar - 'A']--;
                 } else {
                     textCells[attempt][i].setBackgroundResource(R.drawable.edit_text_background);
                 }
